@@ -1,74 +1,120 @@
-
+# for the users account in BOTNET  library
 import mysql.connector as mc
-connection = mc.connect(host='localhost',user='root',passwd='qwertyuiopasdfghjkl')
-crs = connection.cursor()
+dbs = mc.connect(host='localhost',user='root',passwd='qwertyuiopasdfghjkl')
+crs = dbs.cursor()
 print('''
-                     ___      __ ___
-                |) /\ | |\ | |__  |
-                |) \/ | | \| |__  |
 
-				   Login/signup 
+			WELCOME TO BOTNET
 
-        ''')
+     ########\  ##     ##         ##
+     ##     ##  ##     ##/####\   ##
+     ##     ##  ####   ##/   ##   ####
+     ########/  ####   ##    ##   ####
+     ########\  ##     ##    ##   ##
+     ##     ##  ##     ##    ##   ##
+     ##     ##  #####  ##    ##   #####
+     ########/  \####  ##    ##   \#### 
 
-crs.execute('create database IF NOT EXISTS botnet')
-crs.execute('use botnet ')
-crs.execute('create table IF NOT EXISTS user (name varchar(30) primary key , pass varchar(20) not null )')
-crs.execute('create table IF NOT EXISTS books (book varchar(50) not null ,author varchar(30), ID int(4) primary key, qty int(4) ,price int(4) )')
-connection.commit()
-crs.execute("insert into user values('Admin', 12344 )")
-crs.execute("insert into user values('Sample', 1234 )")
-connection.commit()
-crs.execute("insert into books values('Harry Potter','JK Rowling', 101 , 13 ,100)")
-crs.execute("insert into books values('In Search of Lost Time','Marcel Proust', 102 , 20,100 )")
-crs.execute("insert into books values('Sapiens','Yuval Noah Harari', 103 , 231,650 )")
-crs.execute("insert into books values('The Great Gatsby','F. Scott Fitzgerald', 104 , 113 ,230)")
-crs.execute("insert into books values('A Brief History of Time','Stephen Hawking', 105 , 303 ,230)")
-crs.execute("insert into books values('Brief Answers to the Big Questions','Stephen Hawking', 106 , 13,100)")
-connection.commit()
-	
+    ''')
 
-while True:
-	do_yo = input('''
-	DO YOU HAVE A BOTNET ACCOUNT ? (y/n)
-	>>>  ''')
-	if do_yo =='y':
-		print('LOGIN')
-		name =  str(input('Please enter your USER-NAME > '))
-		passw = input('Please enter your pass for Botnet >')
-		print(crs.execute("select name from user where name like %s",(name)))
 
-	# 		print('''
-	# 			Login Successful
+crs.execute('use botnet')
+def productView():
+	print()
+	print("ID  |     Book Name          |  Qty") 
+	crs.execute("select id,book,qty from books ")
+	for i in crs:
+		print(i)
 
-	# 		''')
-	# 		mainRun()
-	# 		break
 
-	# 	else :
-	# 		print('No such user found. Please retry !!! ')
-		
-	elif do_yo == 'exit':
-		break	
-		
-	elif do_yo == 'n' :
-		print('''
+def productPurchase():
+	print()# list altering 
+	print('BOOKS THAT WE HAVE AT BOTNET ...')
+	print()
 
-	 LET'S GET YOU SIGNED UP
+	productView()
 
-	 ''')
+	print()
 
-		name = str(input('Please enter your USER NAME > '))
-		passw = str(input('Please enter a password for your Botnet account >'))
-		crs.execute("select name from user where name like %s",(name))
-		res = crs.fetchone()
-		if name != res :
-			print('Username Already Taken. Please Try again ( type exit to exit )')
+	ask_b = int(input('which book do you want to buy ? (enter the  book id)'))
+	crs.execute ("select book,qty from books where id ="+str(ask_b))
+	for i in crs :
+		print('Book : ',i[0],' |  Qty : ',i[1])
+	print()
 
-		elif name == res:
+	ask_n = int(input("how many do you want to buy "))
+	cnfrm = input('can we confirm your order ? (y/n)')
 
-			crs.execute("insert into user values %s",(name, passw))
-			connection.commit()
-			print("account creation successful")
-			mainRun()
-			break
+	if cnfrm == 'y':
+		crs.execute ("select book,qty from books where id ="+str(ask_b))		
+		for i in crs:
+			if i[1] - ask_n <0: #negative qty is avoided
+				print('')
+				print('''Since your order contains a greater qty than that in the stocks,
+				 your order will bw modified to match the stocks''')
+				ask_n -= -1*(i[1]-ask_n) 
+				print()
+				print('altered qty for buy = ',ask_n)
+				print()
+				crs.execute('update books set qty = qty-'+str(ask_n)+' where id='+str(ask_b))
+				print('thank you for your puchase from BOTNET ')
+				dbs.commit()
+				mainView()
+			else:
+				crs.execute('update books set qty = qty-'+str(ask_n)+' where id='+str(ask_b))
+				dbs.commit()
+				mainView()
+	else:
+		print()
+		mainView()
+
+
+def orderCancel():
+	c_ask = input('do you want to cancel your order ? (y/n)')
+	if c_ask == 'y':
+
+		print()
+		productView()
+		print()
+		sk = input('enter the id of the book to cancel order >>>  ')
+		y2= str(input(' how many books did you order ? ... '))
+		y = input('are you sure you want to cancel the order ? (y/n)')
+		print()
+		if y=='y':
+			crs.execute('update books set qty=qty+'+y2+' where id ='+str(sk)+';')
+			dbs.commit()
+			print('order cancelled  ...')
+			mainView()
+		else:
+			mainView()
+
+
+
+def mainView():
+
+	print('''
+
+		1. View books that we have 
+		2. Purchase a book
+		3. cancel your order 
+		4. Logout
+
+		''')
+	opt = int(input('''
+>>>
+		'''))
+	if opt == 1:
+		productView()
+		mainView()
+
+	elif opt == 2:
+		productPurchase()
+
+	elif opt == 3:
+		orderCancel()
+
+	elif opt == 4:
+		exit()
+
+if __name__ == '__main__':
+	mainView()
