@@ -1,24 +1,9 @@
 # for the users account in BOTNET  library
 import mysql.connector as mc
+import 
 dbs = mc.connect(host='localhost',user='root',passwd='qwertyuiopasdfghjkl')
 crs = dbs.cursor()
-print('''
 
-			WELCOME TO BOTNET
-
-     ########\  ##     ##         ##
-     ##     ##  ##     ##/####\   ##
-     ##     ##  ####   ##/   ##   ####
-     ########/  ####   ##    ##   ####
-     ########\  ##     ##    ##   ##
-     ##     ##  ##     ##    ##   ##
-     ##     ##  #####  ##    ##   #####
-     ########/  \####  ##    ##   \#### 
-
-    ''')
-
-
-crs.execute('use botnet')
 def productView():
 	print()
 	print("ID  |     Book Name          |  Qty") 
@@ -51,7 +36,7 @@ def productPurchase():
 			if i[1] - ask_n <0: #negative qty is avoided
 				print('')
 				print('''Since your order contains a greater qty than that in the stocks,
-				 your order will bw modified to match the stocks''')
+your order will be modified to match the stocks''')
 				ask_n -= -1*(i[1]-ask_n) 
 				print()
 				print('altered qty for buy = ',ask_n)
@@ -59,14 +44,14 @@ def productPurchase():
 				crs.execute('update books set qty = qty-'+str(ask_n)+' where id='+str(ask_b))
 				print('thank you for your puchase from BOTNET ')
 				dbs.commit()
-				mainView()
+				mainView(1)
 			else:
 				crs.execute('update books set qty = qty-'+str(ask_n)+' where id='+str(ask_b))
 				dbs.commit()
-				mainView()
+				mainView(1)
 	else:
 		print()
-		mainView()
+		mainView(1)
 
 
 def orderCancel():
@@ -84,37 +69,55 @@ def orderCancel():
 			crs.execute('update books set qty=qty+'+y2+' where id ='+str(sk)+';')
 			dbs.commit()
 			print('order cancelled  ...')
-			mainView()
+			mainView(1)
 		else:
-			mainView()
+			mainView(1)
 
 
 
-def mainView():
+def mainView(val):
+	if val != 0:
 
-	print('''
+		print('''
 
-		1. View books that we have 
-		2. Purchase a book
-		3. cancel your order 
-		4. Logout
+			1. View books that we have 
+			2. Purchase a book
+			3. cancel your order 
+			4. Logout
 
-		''')
-	opt = int(input('''
->>>
-		'''))
-	if opt == 1:
-		productView()
-		mainView()
+			''')
+		opt = int(input('''
+	>>>
+			'''))
+		if opt == 1:
+			productView()
+			mainView(1)
 
-	elif opt == 2:
-		productPurchase()
+		elif opt == 2:
+			productPurchase()
 
-	elif opt == 3:
-		orderCancel()
+		elif opt == 3:
+			orderCancel()
 
-	elif opt == 4:
-		exit()
+		elif opt == 4:
+			exit()
+	else:
+		print('''
 
-if __name__ == '__main__':
-	mainView()
+			WELCOME TO BOTNET
+
+     ########\  ##     ##         ##
+     ##     ##  ##     ##/####\   ##
+     ##     ##  ####   ##/   ##   ####
+     ########/  ####   ##    ##   ####
+     ########\  ##     ##    ##   ##
+     ##     ##  ##     ##    ##   ##
+     ##     ##  #####  ##    ##   #####
+     ########/  \####  ##    ##   \#### 
+
+    ''')
+
+
+		crs.execute('use botnet')
+		mainView(1)
+
