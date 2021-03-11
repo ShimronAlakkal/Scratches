@@ -3,7 +3,7 @@ This repo contains some of the simple time-pass projects or scripts that I'll be
 
 For projects based on python and mysql to work, you'll need to perform the following in your terminal
  For Windows
- ```
+ ```bash
 cd <project dir>
 py -m venv <env Name>
 .\<env Name>\Scripts\activate
