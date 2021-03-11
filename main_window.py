@@ -57,7 +57,6 @@ your order will be modified to match the stocks''')
 def orderCancel():
 	c_ask = input('do you want to cancel your order ? (y/n)')
 	if c_ask == 'y':
-
 		print()
 		productView()
 		print()
@@ -72,7 +71,6 @@ def orderCancel():
 			mainView(1)
 		else:
 			mainView(1)
-
 
 
 def mainView(val):
@@ -117,7 +115,5 @@ def mainView(val):
 
     ''')
 
-
 		crs.execute('use botnet')
 		mainView(1)
-

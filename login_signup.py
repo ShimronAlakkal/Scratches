@@ -41,6 +41,7 @@ def userSignUp(Username, Password):
 	connection.commit()
 	main_window.mainView(0)
 
+
 def userCheck(Username):
 	crs.execute("SELECT name from USER where name like '"+str(Username)+"'" )
 	result = crs.fetchall()
@@ -71,7 +72,6 @@ def Auth(val):
 			else:
 				passwd = eval(input("Please enter your password for Botnet "))		
 				userSignUp(username,passwd)
-				
 			
 		elif auth == 0:
 			exit()
