@@ -2,7 +2,7 @@
 import mysql.connector as mc
 import main_window
 
-connection = mc.connect(host='localhost',user='root',passwd='qwertyuiopasdfghjkl')
+connection = mc.connect(host='localhost',user='root',passwd='your pass')
 crs = connection.cursor()
 
 crs.execute('create database IF NOT EXISTS botnet')
@@ -10,7 +10,7 @@ crs.execute('use botnet ')
 crs.execute('create table IF NOT EXISTS user (name varchar(30) primary key , pass varchar(20) not null )')
 crs.execute('create table IF NOT EXISTS books (book varchar(50) not null ,author varchar(30), ID int(4) primary key, qty int(4) ,price int(4) )')
 connection.commit()
-try:
+try: 
 	crs.execute("insert into user values('Admin', '12344' )")
 	crs.execute("insert into user values('Sample', '1234' )")
 	connection.commit()
