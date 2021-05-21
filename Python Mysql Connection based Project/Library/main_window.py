@@ -1,7 +1,7 @@
 # for the users account in BOTNET  library
 import mysql.connector as mc
 import 
-dbs = mc.connect(host='localhost',user='root',passwd='qwertyuiopasdfghjkl')
+dbs = mc.connect(host='localhost',user='root',passwd='your pass')
 crs = dbs.cursor()
 
 def productView():
